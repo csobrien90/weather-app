@@ -1,13 +1,24 @@
 import React from 'react';
 
-export default function Weather() {
+export default function Weather({ generatedAt, periods }: { generatedAt: string, periods: { number: number, name: string, detailedForecast: string, temperature: number, windSpeed: string }[] }) {
+	if (!periods || !periods.length || !generatedAt) {
+		return null;
+	}
+
 	return (
 		<section>
 			<h2>Weather</h2>
-			<p>Temperature: 75°F</p>
-			<p>Conditions: Sunny</p>
-			<p>Wind Speed: 5 mph</p>
-			<p>Forecast: Clear skies with a high of 80°F and a low of 60°F</p>
+			<p>Generated at: {generatedAt}</p>
+			<ul>
+				{periods.map((period) => (
+					<li key={period.number}>
+						<h3>{period.name}</h3>
+						<p>{period.detailedForecast}</p>
+						<p>Temperature: {period.temperature}°F</p>
+						<p>Wind Speed: {period.windSpeed}</p>
+					</li>
+				))}
+			</ul>
 		</section>
 	)
 }

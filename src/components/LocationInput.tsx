@@ -1,29 +1,21 @@
-import { useState } from 'react';
+import { fetchWeatherData } from '../lib/fetchWeatherData';
 
-export default function LocationInput() {
-	const [streetAddress, setStreetAddress] = useState('');
-	const [city, setCity] = useState('');
-	const [state, setState] = useState('');
-	const [zip, setZip] = useState('');
+export default function LocationInput({locationData, setLocationData, setWeatherData}: {
+	locationData: {streetAddress: string, city: string, state: string, zip: string},
+	setLocationData: (locationData: {streetAddress: string, city: string, state: string, zip: string}) => void,
+	setWeatherData: (weatherData: {generatedAt: string, periods: any[]} ) => void
+}): JSX.Element {
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault();
-
-		// Fetch the latitude and longitude coordinates from the Nominatim API
-		// https://nominatim.openstreetmap.org/search?city=Louisville&street=600+W+Main+St&format=jsonv2
-
-		// Build the URL
-		const url = new URL('https://nominatim.openstreetmap.org/search');
-		url.searchParams.set('street', streetAddress);
-		url.searchParams.set('city', city);
-		url.searchParams.set('state', state);
-		url.searchParams.set('postalcode', zip);
-		url.searchParams.set('format', 'jsonv2');
+		const weatherData = await fetchWeatherData(locationData);
 		
-		// Fetch the data
-		const response = await fetch(url.toString());
-		const data = await response.json();
-		console.log(data);
+		if ('error' in weatherData) {
+			console.error(weatherData.error);
+			return;
+		}
+		
+		setWeatherData(weatherData);
 	}
 
 	return (
@@ -33,8 +25,8 @@ export default function LocationInput() {
 				<input
 					type="text"
 					id="streetAddress"
-					value={streetAddress}
-					onChange={(e) => setStreetAddress(e.target.value)}
+					value={locationData.streetAddress}
+					onChange={(e) => setLocationData({ ...locationData, streetAddress: e.target.value })}
 				/>
 			</div>
 			<div>
@@ -42,8 +34,8 @@ export default function LocationInput() {
 				<input
 					type="text"
 					id="city"
-					value={city}
-					onChange={(e) => setCity(e.target.value)}
+					value={locationData.city}
+					onChange={(e) => setLocationData({ ...locationData, city: e.target.value })}
 				/>
 			</div>
 			<div>
@@ -51,8 +43,8 @@ export default function LocationInput() {
 				<input
 					type="text"
 					id="state"
-					value={state}
-					onChange={(e) => setState(e.target.value)}
+					value={locationData.state}
+					onChange={(e) => setLocationData({ ...locationData, state: e.target.value })}
 				/>
 			</div>
 			<div>
@@ -60,8 +52,8 @@ export default function LocationInput() {
 				<input
 					type="text"
 					id="zip"
-					value={zip}
-					onChange={(e) => setZip(e.target.value)}
+					value={locationData.zip}
+					onChange={(e) => setLocationData({ ...locationData, zip: e.target.value })}
 				/>
 			</div>
 			<button type="submit" onClick={handleSubmit}>

@@ -1,9 +1,23 @@
+import { SetStateAction, useState } from 'react';
+
 import LocationInput from './components/LocationInput'
 import Weather from './components/Weather'
 
 import './App.css'
 
 function App() {
+	const [locationData, setLocationData] = useState({
+		streetAddress: '',
+		city: '',
+		state: '',
+		zip: ''
+	});
+
+	const [weatherData, setWeatherData]: [any, any] = useState({
+		generatedAt: '',
+		periods: []
+	});
+
 	/*
 		1. Input and Submit: Provide an input field where users can enter an address, city, or
 		other location and a method for querying weather data based on user input.
@@ -22,8 +36,8 @@ function App() {
 	return (
 		<main>
 			<h1>Weather App</h1>
-			<LocationInput />
-			<Weather />
+			<LocationInput locationData={locationData} setLocationData={setLocationData} setWeatherData={setWeatherData} />
+			<Weather {...weatherData} />
 		</main>
 	)
 }
