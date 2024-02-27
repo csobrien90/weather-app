@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function Weather({ generatedAt, periods }: { generatedAt: string, periods: { number: number, name: string, detailedForecast: string, temperature: number, windSpeed: string }[] }) {
 	if (!periods || !periods.length || !generatedAt) {
 		return null;

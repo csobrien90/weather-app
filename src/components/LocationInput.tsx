@@ -18,6 +18,26 @@ export default function LocationInput({locationData, setLocationData, setWeather
 		setWeatherData(weatherData);
 	}
 
+	const getCurrentLocation = async () => {
+		try {
+			const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+				navigator.geolocation.getCurrentPosition(resolve, reject);
+			});
+			const { coords } = position;
+			const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.latitude}&lon=${coords.longitude}`);
+			const data = await response.json();
+			console.log({data});
+			setLocationData({
+				streetAddress: data.address.road,
+				city: data.address.city,
+				state: data.address.state,
+				zip: data.address.postcode
+			});
+		} catch (error) {
+			console.error(error);
+		}
+	}
+
 	return (
 		<form>
 			<div>
@@ -59,6 +79,10 @@ export default function LocationInput({locationData, setLocationData, setWeather
 			<button type="submit" onClick={handleSubmit}>
 				Submit
 			</button>
+			<button
+				type='button'
+				onClick={getCurrentLocation}
+			>Use Current Location</button>
 		</form>
 	)
 }
