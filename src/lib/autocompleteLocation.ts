@@ -9,11 +9,18 @@ export async function autocompleteLocation(
 		// Check if the request was aborted
 		if (signal.aborted) return;
 
+		// Build the URL for the Geoapify API
+		const url = new URL('https://api.geoapify.com/v1/geocode/autocomplete');
+		url.searchParams.set('text', address);
+		url.searchParams.set('apiKey', GEOAPIFY_API_KEY);
+		url.searchParams.set('filter', 'countrycode:us');
+		url.searchParams.set('limit', '20');
+
 		// Fetch the location data from the Geoapify API
-		const response = await fetch(`https://api.geoapify.com/v1/geocode/autocomplete?text=${address}&apiKey=${GEOAPIFY_API_KEY}`, {signal});
+		const response = await fetch(url.toString(), { signal });
 
 		// Parse the response and return the possible locations
-		const data = await response.json();
+		const data = await response.json();		
 		return data.features;
 	} catch (error) {
 		// If the request was aborted, let it fail silently and return

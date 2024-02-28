@@ -5,7 +5,13 @@ export async function fetchWeatherData(
 ): Promise< WeatherDataExtended | {error: string}> {
 	try {
 		// Fetch the latitude and longitude coordinates from the Nominatim API
-		const { lat, lon, displayName } = await getCoordinates(locationData.formattedAddress);
+		const coordinates = await getCoordinates(locationData.formattedAddress);
+
+		if ('error' in coordinates) {
+			return { error: coordinates.error }
+		}
+
+		const { lat, lon, displayName } = coordinates;
 
 		// Check if the location is in the United States, if not return an error
 		if (!displayName.includes('United States')) {
@@ -29,6 +35,7 @@ export async function fetchWeatherData(
 			
 			switch (name) {
 				case "Today":
+				case "This Afternoon":
 					acc['Today'] = {...acc['Today'], day: period}
 					break;
 				case "Tonight":
@@ -49,24 +56,34 @@ export async function fetchWeatherData(
 
 		return { generatedAt, days, displayName }
 	} catch (error) {
-		// Log the error and return an error message
-		console.error(error);
+		// Return an error message
 		return { error: `An error occurred while fetching the weather data: ${(error as Error).message}` }
 	}
 }
 
-async function getCoordinates(address: string): Promise<{lat: string, lon: string, displayName: string}> {
+async function getCoordinates(address: string): Promise<{lat: string, lon: string, displayName: string} | {error: string}> {
 	// Fetch the latitude and longitude coordinates from the Nominatim API
 	const url = new URL('https://nominatim.openstreetmap.org/search');
 	url.searchParams.set('q', address);
 	url.searchParams.set('format', 'jsonv2');
 	
-	// Fetch the location data
-	const response = await fetch(url.toString());
-	const locations = await response.json() as { lat: string, lon: string, display_name: string }[];
-	const { lat, lon, display_name: displayName  } = locations[0];
-
-	return { lat, lon, displayName }
+	try {
+		// Fetch the location data
+		const response = await fetch(url.toString());
+		const locations = await response.json();
+		
+		// Validate the location data
+		if (locations.length === 0) {
+			return {error: 'No location data found'};
+		}
+		
+		const { lat, lon, display_name: displayName  } = locations[0];
+	
+		return { lat, lon, displayName }
+	} catch (error) {
+		// Return an error message
+		return { error: `An error occurred while fetching the location data: ${(error as Error).message}` }
+	}
 }
 
 async function getForecast(lat: string, lon: string): Promise<ForecastData | {error: string}> {

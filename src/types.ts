@@ -1,3 +1,10 @@
+export interface FormStateMessageProps {
+	locationLookupLoading: boolean;
+	error: string;
+	addressLookup: string;
+	possibleLocations: autocompleteLocationData[];
+}
+
 export interface ForecastData {
 	generatedAt: string,
 	periods: Period[]
