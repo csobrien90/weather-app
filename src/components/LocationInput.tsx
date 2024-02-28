@@ -2,6 +2,7 @@ import { useState, Dispatch, SetStateAction, ChangeEvent } from 'react';
 import { fetchWeatherData } from '../lib/fetchWeatherData';
 import { autocompleteLocation } from '../lib/autocompleteLocation';
 import { LocationData, WeatherData, autocompleteLocationData, FormStateMessageProps } from '../types';
+import locationIcon from '../assets/images/location.svg';
 
 const FormStateMessage: React.FC<FormStateMessageProps> = ({
 	locationLookupLoading,
@@ -187,7 +188,7 @@ export default function LocationInput({
 				<button
 					type='button'
 					onClick={getCurrentLocation}
-				>Use Current Location</button>
+				>Use Current Location <img src={locationIcon} alt="use current location" /></button>
 			</form>
 			<FormStateMessage
 				locationLookupLoading={locationLookupLoading}

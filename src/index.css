@@ -69,7 +69,6 @@ main, article {
 
 form {
 	display: grid;
-	grid-template-columns: 1fr auto;
 	gap: 1em;
 	align-items: flex-end;
 }
@@ -79,6 +78,7 @@ input {
 	padding: 1em;
 	border: 1px solid var(--neutral);
 	width: 100%;
+	border-radius: 5px;
 }
 
 button {
@@ -86,6 +86,9 @@ button {
 	border: none;
 	padding: 1em 2em;
 	cursor: pointer;
+	border-radius: 5px;
+	display: grid;
+	justify-content: center;
 }
 
 button:hover, button:active {
@@ -94,9 +97,82 @@ button:hover, button:active {
 	box-shadow: inset 0 0 10px -2px var(--orange);
 }
 
+button:has(img):hover img, button:has(img):active img{
+	filter: invert(1);
+}
+
+.weather-card {
+	display: grid;
+	grid-template-columns: 100px 1fr;
+	gap: 1em;
+	padding: 1em;
+	background-color: var(--gray);
+	border-radius: 5px;
+}
+
+.weather-card > img {
+	width: 100px;
+	aspect-ratio: 1/1;
+}
+
+.weather-card > div {
+	display: grid;
+	gap: .5em;
+	align-content: center;
+}
+
+.weather-card p:has(img) {
+	display: flex;
+	gap: .5em;
+}
+
+.weather-card p:has(img) span {
+	display: flex;
+	align-items: center;
+	gap: .3em;
+}
+
+button:has(img) {
+	display: flex;
+	align-items: center;
+	gap: .6em;
+}
+
+.weather-card p:has(img) img,
+button:has(img) img {
+	width: 1.5em;
+}
+
+.description {
+	display: none;
+}
+
 @media screen and (min-width: 768px){
 	body {
 		font-size: 12px;
+	}
+
+	form {
+		grid-template-columns: 1fr auto;
+	}
+
+	.weather-card {
+		grid-template-columns: 150px 1fr;
+	}
+
+	.weather-card > img {
+		width: 150px;
+	}
+
+	.weather-card > div {
+		grid-template-columns: auto 1fr;
+		gap: .5em 2em;
+	}
+
+	.description {
+		display: grid;
+		gap: .5em;
+		grid-column: span 2;
 	}
 }
 

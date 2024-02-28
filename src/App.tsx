@@ -5,8 +5,7 @@ import { useState } from 'react';
 import LocationInput from './components/LocationInput'
 import Weather from './components/Weather'
 
-// Import styles
-import './App.css'
+// Import types
 import { WeatherDays, LocationData } from './types';
 
 export default function App() {

@@ -1,4 +1,14 @@
-import { WeatherProps } from '../types';
+import { WeatherDay, WeatherProps } from '../types';
+
+// Import icon images
+import dayIcon from '../assets/images/day.svg';
+import nightIcon from '../assets/images/night.svg';
+import sunIcon from '../assets/images/sun.svg';
+import partialSunIcon from '../assets/images/partial-sun.svg';
+import rainIcon from '../assets/images/rain.svg';
+import snowIcon from '../assets/images/snow.svg';
+import stormIcon from '../assets/images/thunder.svg';
+import cloudIcon from '../assets/images/cloud.svg';
 
 export default function Weather({
 	generatedAt,
@@ -36,27 +46,40 @@ export default function Weather({
 		<section>
 			<h2>Forecast for {displayName}</h2>
 			<p>Last updated on: {formattedDate}</p>
-			{
-				Object.keys(limitedDays).map((day, index) => {
-					const { day: dayPeriod, night: nightPeriod } = days[day];
-					return (
-						<article key={index}>
-							<h3>{day}</h3>
-							<img src={dayPeriod?.icon} alt={dayPeriod?.detailedForecast} />
-							<p>{dayPeriod?.detailedForecast}</p>
-							<p>Temperature: {dayPeriod?.temperature}°F</p>
-							<p>Wind Speed: {dayPeriod?.windSpeed} {dayPeriod?.windDirection}</p>
-							<h3>Night</h3>
-							<img src={nightPeriod?.icon} alt={nightPeriod?.detailedForecast} />
-							<p>{nightPeriod?.detailedForecast}</p>
-							<p>Temperature: {nightPeriod?.temperature}°F</p>
-							<p>Wind: {nightPeriod?.windSpeed} {nightPeriod?.windDirection}</p>
-						</article>
-					)
-				})
-			}
+			{ Object.keys(limitedDays).map((day, index) => <WeatherCard key={index} day={day} data={limitedDays[day]} format="landscape" />) }
 		</section>
 	)
+}
+
+function WeatherCard({ day, data, format }: { day: string, data: WeatherDay, format: "portrait" | "landscape" }): JSX.Element {
+	const desc = getDescription(data);
+
+	// Determine which icon to use
+	const descText = data.day ? data.day.detailedForecast : data.night ? data.night.detailedForecast : '';
+	const icon = getIcon(descText);
+
+	switch (format) {
+		case "portrait":
+			// To do
+			return <></>
+		case "landscape":
+			return (
+				<article className='weather-card'>
+					<img src={icon.src} alt={icon.alt} />
+					<div>
+						<h3>{day}</h3>
+						<p>
+							{data.day && <span><img src={dayIcon} alt="sun" /> {data.day.temperature}&deg;{data.day.temperatureUnit}</span>}
+							<span> / </span>
+							{data.night && <span><img src={nightIcon} alt="moon" /> {data.night.temperature}&deg;{data.night.temperatureUnit}</span>}
+						</p>
+						{desc && <span className="description" >{desc}</span>}
+					</div>
+				</article>
+			)
+		default:
+			return <></>
+	}
 }
 
 const formatDisplayName = (displayName: string): string => {
@@ -72,4 +95,28 @@ const formatDisplayName = (displayName: string): string => {
 	}
 
 	return formattedDisplayName;
+}
+
+const getIcon = (desc: string): {src: string, alt: string} => {
+	if (desc.toLowerCase().includes('partly')) return {src: partialSunIcon, alt: 'mostly sunny'};
+	if (desc.toLowerCase().includes('sunny')) return {src: sunIcon, alt: 'sunny'};
+	if (desc.toLowerCase().includes('thunder')) return {src: stormIcon, alt: 'thunderstorm'};
+	if (desc.toLowerCase().includes('rain')) return {src: rainIcon, alt: 'rain'};
+	if (desc.toLowerCase().includes('snow')) return {src: snowIcon, alt: 'snow'};
+	if (desc.toLowerCase().includes('fog')) return {src: cloudIcon, alt: 'cloudy'};
+
+	return {src: '', alt: desc};
+}
+
+const getDescription = (data: WeatherDay): JSX.Element | null => {
+	if (!data.day && !data.night) return null;
+
+	const dayDesc = data.day ? data.day.detailedForecast : '';
+	const nightDesc = data.night ? data.night.detailedForecast : '';
+
+	if (dayDesc && nightDesc) return <><p>Day: {dayDesc}</p><p>Night: {nightDesc}</p></>;
+	if (dayDesc) return <p>{dayDesc}</p>;
+	if (nightDesc) return <p>{nightDesc}</p>;
+
+	return null;
 }
