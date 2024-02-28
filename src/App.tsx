@@ -7,14 +7,14 @@ import Weather from './components/Weather'
 
 // Import styles
 import './App.css'
-import { WeatherData, LocationData } from './types';
+import { WeatherDays, LocationData } from './types';
 
 export default function App() {
 	// Create app state
 	const [locationData, setLocationData] = useState({formattedAddress: '', displayName: ''} as LocationData);
 	const [weatherData, setWeatherData] = useState({
 		generatedAt: '',
-		periods: [] as WeatherData['periods']
+		days: {} as WeatherDays
 	});
 
 	return (

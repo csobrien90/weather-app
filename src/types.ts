@@ -1,12 +1,24 @@
+export interface ForecastData {
+	generatedAt: string,
+	periods: Period[]
+}
+
 export interface WeatherData {
 	generatedAt: string,
-	periods: { 
-		number: number,
-		name: string,
-		detailedForecast: string,
-		temperature: number,
-		windSpeed: string
-	}[]
+	days: WeatherDays
+}
+
+export interface Period { 
+	number: number,
+	name: string,
+	detailedForecast: string,
+	temperature: number,
+	temperatureUnit: "F" | "C",
+	windSpeed: string,
+	windDirection: string,
+	startTime: string,
+	endTime: string,
+	icon: string
 }
 
 export interface WeatherProps extends WeatherData {
@@ -15,6 +27,15 @@ export interface WeatherProps extends WeatherData {
 
 export interface WeatherDataExtended extends WeatherData {
 	displayName: string
+}
+
+export interface WeatherDays {
+	[key: string]: WeatherDay
+}
+
+export interface WeatherDay {
+	day?: Period,
+	night?: Period
 }
 
 export interface LocationData {

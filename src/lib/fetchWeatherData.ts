@@ -1,4 +1,4 @@
-import { WeatherDataExtended, LocationData } from "../types";
+import { WeatherDataExtended, LocationData, Period, WeatherDays, ForecastData } from "../types";
 
 export async function fetchWeatherData(
 	locationData: LocationData
@@ -20,10 +20,34 @@ export async function fetchWeatherData(
 			return forecast;
 		}	
 
-		// Desctructure the weather data and return it
+		// Desctructure the weather data
 		const { generatedAt, periods } = forecast;
 
-		return { generatedAt, periods, displayName }
+		// Parse the periods into days
+		const days = periods.reduce((acc, period: Period) => {
+			const { name } = period;
+			
+			switch (name) {
+				case "Today":
+					acc['Today'] = {...acc['Today'], day: period}
+					break;
+				case "Tonight":
+					acc['Today'] = {...acc['Today'], night: period}
+					break;
+				default:
+					if (name.includes('Night')) {
+						const dayName = name.split(' ')[0]
+						acc[dayName] = {...acc[dayName], night: period}
+					} else {
+						acc[name] = {...acc[name], day: period}
+					}
+					break;
+			}
+
+			return acc
+		}, {} as WeatherDays);		
+
+		return { generatedAt, days, displayName }
 	} catch (error) {
 		// Log the error and return an error message
 		console.error(error);
@@ -45,16 +69,7 @@ async function getCoordinates(address: string): Promise<{lat: string, lon: strin
 	return { lat, lon, displayName }
 }
 
-async function getForecast(lat: string, lon: string): Promise<{
-	generatedAt: string,
-	periods: {
-		number: number,
-		name: string,
-		detailedForecast: string,
-		temperature: number,
-		windSpeed: string,
-	}[]
-} | {error: string}> {
+async function getForecast(lat: string, lon: string): Promise<ForecastData | {error: string}> {
 	// Fetch the weather data from the National Weather Service API
 	const weatherResponse = await fetch(`https://api.weather.gov/points/${lat},${lon}`);
 	const { properties: { forecast: forecastUrl } } = await weatherResponse.json()
