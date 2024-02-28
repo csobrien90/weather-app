@@ -7,9 +7,10 @@ export default function LocationInput({
 	setLocationData,
 	setWeatherData
 }: {
-	setLocationData: (locationData: LocationData) => void,
+	setLocationData: React.Dispatch<React.SetStateAction<LocationData>>,
 	setWeatherData: React.Dispatch<React.SetStateAction<WeatherData>>
 }): JSX.Element {
+	// State
 	const [addressLookup, setAddressLookup] = useState('');
 	const [locationLookupLoading, setLocationLookupLoading] = useState(false);
 	const [addressLookupAbortController, setAddressLookupAbortController] = useState(new AbortController());
@@ -147,9 +148,38 @@ export default function LocationInput({
 				type='button'
 				onClick={getCurrentLocation}
 			>Use Current Location</button>
-			{locationLookupLoading && <p>Loading...</p>}
-			{!locationLookupLoading && addressLookup.length > 0 && possibleLocations.length === 0 && <p>No results found</p>}
-			{error && <p>{error}</p>}
+			<FormStateMessage
+				locationLookupLoading={locationLookupLoading}
+				error={error}
+				addressLookup={addressLookup}
+				possibleLocations={possibleLocations}
+			/>
 		</form>
 	)
+}
+
+const FormStateMessage = ({
+	locationLookupLoading,
+	error,
+	addressLookup,
+	possibleLocations
+}: {
+	locationLookupLoading: boolean,
+	error: string,
+	addressLookup: string,
+	possibleLocations: string[]
+}): JSX.Element => {
+	if (locationLookupLoading) {
+		return <p>Loading...</p>
+	}
+
+	if (error) {
+		return <p>{error}</p>
+	}
+
+	if (addressLookup.length > 0 && possibleLocations.length === 0) {
+		return <p>No results found</p>
+	}
+
+	return <></>
 }

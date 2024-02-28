@@ -1,0 +1,31 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Weather renders correctly 1`] = `
+<section>
+  <h2>
+    Forecast for 
+    123 Main St, Springfield
+  </h2>
+  <p>
+    Last updated on: 
+    Sunday, August 1, 2021 at 1:00 PM
+  </p>
+  <article>
+    <h3>
+      Today
+    </h3>
+    <p>
+      Sunny
+    </p>
+    <p>
+      Temperature: 
+      80
+      °F
+    </p>
+    <p>
+      Wind Speed: 
+      5 mph
+    </p>
+  </article>
+</section>
+`;

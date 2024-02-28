@@ -26,7 +26,10 @@ export default function App() {
 				setLocationData={setLocationData}
 				setWeatherData={setWeatherData}
 			/>
-			<Weather locationData={locationData} {...weatherData} />
+			<Weather
+				locationData={locationData}
+				{...weatherData}
+			/>
 		</main>
 	)
 }
