@@ -1,18 +1,19 @@
 import { useState } from 'react';
 import { fetchWeatherData } from '../lib/fetchWeatherData';
 import { autocompleteLocation } from '../lib/autocompleteLocation';
+import { LocationData, WeatherData, autocompleteLocationData } from '../types';
 
 export default function LocationInput({
 	setLocationData,
 	setWeatherData
 }: {
-	setLocationData: (locationData: {formattedAddress: string, displayName: string}) => void,
-	setWeatherData: (weatherData: {generatedAt: string, periods: any[]} ) => void,
+	setLocationData: (locationData: LocationData) => void,
+	setWeatherData: React.Dispatch<React.SetStateAction<WeatherData>>
 }): JSX.Element {
 	const [addressLookup, setAddressLookup] = useState('');
 	const [locationLookupLoading, setLocationLookupLoading] = useState(false);
 	const [addressLookupAbortController, setAddressLookupAbortController] = useState(new AbortController());
-	const [possibleLocations, setPossibleLocations] = useState([]);
+	const [possibleLocations, setPossibleLocations] = useState([] as string[]);
 	const [error, setError] = useState('');
 
 	const handleAddressLookup = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -57,13 +58,16 @@ export default function LocationInput({
 		}
 
 		// Set possible locations
-		const possibleLocations = data.map((item: any) => item.properties.formatted)
+		const possibleLocations = data.map((item: autocompleteLocationData) => item.properties.formatted)
 		setPossibleLocations(possibleLocations);
 
 		// If value is an exact match, set locationData
 		if (possibleLocations.length >= 1 && possibleLocations[0] === e.target.value) {
 			// Set locationData to the selected location
-			const selectedLocation = data.find((item: any) => item.properties.formatted === e.target.value);
+			const selectedLocation = data.find((item: autocompleteLocationData) => item.properties.formatted === e.target.value);
+
+			if (!selectedLocation) return;
+
 			const newAddress = selectedLocation.properties.formatted;
 			setLocationData({
 				formattedAddress: newAddress,
