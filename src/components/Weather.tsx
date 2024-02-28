@@ -22,9 +22,23 @@ export default function Weather({
 	const options: Intl.DateTimeFormatOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: 'numeric', minute: 'numeric' };
 	const formattedDate = date.toLocaleTimeString(undefined, options);
 
+	// Format the displayName
+	let displayName = ''
+	if (locationData.displayName.split(',').length > 5) {
+		displayName = locationData.displayName.split(',').slice(3, -3).join(',');
+	} else if (locationData.displayName.split(',').length > 3) {
+		displayName = locationData.displayName.split(',').slice(1, -1).join(',');
+	} else {
+		displayName = locationData.displayName.split(',').slice(0, -1).join(',');
+	}
+
+	if (!displayName || periods.length === 0) {
+		return null;
+	}
+
 	return (
 		<section>
-			<h2>Forecast for {locationData.displayName.split(',').splice(1).join(',').replace(', United States of America', '')}</h2>
+			<h2>Forecast for {displayName}</h2>
 			<p>Last updated on: {formattedDate}</p>
 			{periods.map((period, index) => (
 				<article key={index}>

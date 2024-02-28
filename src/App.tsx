@@ -16,7 +16,10 @@ export default function App() {
 	return (
 		<main>
 			<h1>Weather App</h1>
-			<LocationInput locationData={locationData} setLocationData={setLocationData} setWeatherData={setWeatherData} />
+			<LocationInput
+				setLocationData={setLocationData}
+				setWeatherData={setWeatherData}
+			/>
 			<Weather locationData={locationData} {...weatherData} />
 		</main>
 	)

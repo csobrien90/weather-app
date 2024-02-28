@@ -2,14 +2,18 @@ import { useState } from 'react';
 import { fetchWeatherData } from '../lib/fetchWeatherData';
 import { autocompleteLocation } from '../lib/autocompleteLocation';
 
-export default function LocationInput({setLocationData, setWeatherData}: {
-	locationData: {formattedAddress: string, displayName: string},
+export default function LocationInput({
+	setLocationData,
+	setWeatherData
+}: {
 	setLocationData: (locationData: {formattedAddress: string, displayName: string}) => void,
-	setWeatherData: (weatherData: {generatedAt: string, periods: any[]} ) => void
+	setWeatherData: (weatherData: {generatedAt: string, periods: any[]} ) => void,
 }): JSX.Element {
 	const [addressLookup, setAddressLookup] = useState('');
+	const [locationLookupLoading, setLocationLookupLoading] = useState(false);
 	const [addressLookupAbortController, setAddressLookupAbortController] = useState(new AbortController());
 	const [possibleLocations, setPossibleLocations] = useState([]);
+	const [error, setError] = useState('');
 
 	const handleAddressLookup = async (e: React.ChangeEvent<HTMLInputElement>) => {
 		// Cancel previous fetch
@@ -20,6 +24,7 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 			setAddressLookup('');
 			setLocationData({formattedAddress: '', displayName: ''});
 			setPossibleLocations([]);
+			setError('');
 			return;
 		}
 
@@ -29,6 +34,12 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 		// Don't make API call if input is less than 3 characters
 		if (e.target.value.length < 3) return;
 
+		// Set loading state
+		setLocationLookupLoading(true);
+
+		// Clear error
+		setError('');
+		
 		// Create new AbortController
 		const newAbortController = new AbortController();
 		setAddressLookupAbortController(newAbortController);
@@ -40,6 +51,8 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 		
 		if ('error' in data) {
 			console.error(data.error);
+			setError(data.error);
+			setLocationLookupLoading(false);
 			return;
 		}
 
@@ -48,13 +61,13 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 		setPossibleLocations(possibleLocations);
 
 		// If value is an exact match, set locationData
-		if (possibleLocations.length === 1 && possibleLocations[0] === e.target.value) {
+		if (possibleLocations.length >= 1 && possibleLocations[0] === e.target.value) {
 			// Set locationData to the selected location
 			const selectedLocation = data.find((item: any) => item.properties.formatted === e.target.value);
 			const newAddress = selectedLocation.properties.formatted;
 			setLocationData({
 				formattedAddress: newAddress,
-				displayName: newAddress.split(',').slice(0, -1).join(',')
+				displayName: newAddress
 			});
 
 			// Get weather data
@@ -62,6 +75,8 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 
 			if ('error' in newWeatherData) {
 				console.error(newWeatherData.error);
+				setError(newWeatherData.error);
+				setLocationLookupLoading(false);
 				return;
 			}
 
@@ -73,9 +88,14 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 			// Clear addressLookup
 			setAddressLookup('');
 		}
+
+		// Clear loading state
+		setLocationLookupLoading(false);
 	}
 
 	const getCurrentLocation = async () => {
+		setLocationLookupLoading(true);
+
 		try {
 			const position = await new Promise<GeolocationPosition>((resolve, reject) => {
 				navigator.geolocation.getCurrentPosition(resolve, reject);
@@ -87,6 +107,8 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 
 			if ('error' in newWeatherData) {
 				console.error(newWeatherData.error);
+				setError(newWeatherData.error);
+				setLocationLookupLoading(false);
 				return;
 			}
 
@@ -99,9 +121,10 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 
 			setWeatherData(newWeatherData);
 
-			
+			setLocationLookupLoading(false);
 		} catch (error) {
 			console.error(error);
+			setLocationLookupLoading(false);
 		}
 	}
 
@@ -120,6 +143,9 @@ export default function LocationInput({setLocationData, setWeatherData}: {
 				type='button'
 				onClick={getCurrentLocation}
 			>Use Current Location</button>
+			{locationLookupLoading && <p>Loading...</p>}
+			{!locationLookupLoading && addressLookup.length > 0 && possibleLocations.length === 0 && <p>No results found</p>}
+			{error && <p>{error}</p>}
 		</form>
 	)
 }

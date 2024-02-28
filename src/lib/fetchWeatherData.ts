@@ -11,6 +11,10 @@ export async function fetchWeatherData(locationData: {formattedAddress: string})
 } | {error: string}> {
 	try {
 		const { lat, lon, displayName } = await getCoordinates(locationData.formattedAddress);
+
+		if (!displayName.includes('United States')) {
+			return { error: 'This app only supports locations in the United States' }
+		}
 		
 		const forecast = await getForecast(lat, lon);
 
