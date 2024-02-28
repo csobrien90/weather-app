@@ -6,12 +6,7 @@ import Weather from './components/Weather'
 import './App.css'
 
 export default function App() {
-	const [locationData, setLocationData] = useState({
-		streetAddress: '',
-		city: '',
-		state: '',
-		zip: ''
-	});
+	const [locationData, setLocationData] = useState({formattedAddress: '', displayName: ''});
 
 	const [weatherData, setWeatherData]: [any, any] = useState({
 		generatedAt: '',
@@ -22,7 +17,7 @@ export default function App() {
 		<main>
 			<h1>Weather App</h1>
 			<LocationInput locationData={locationData} setLocationData={setLocationData} setWeatherData={setWeatherData} />
-			<Weather {...weatherData} />
+			<Weather locationData={locationData} {...weatherData} />
 		</main>
 	)
 }
