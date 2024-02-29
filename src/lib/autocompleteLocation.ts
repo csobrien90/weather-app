@@ -1,4 +1,3 @@
-import { GEOAPIFY_AUTOCOMPLETE_LAMBDA_URL } from '../../env'
 import { autocompleteLocationData } from '../types'
 
 export async function autocompleteLocation(
@@ -10,7 +9,8 @@ export async function autocompleteLocation(
 		if (signal.aborted) return;
 
 		// Build the URL for the Geoapify Autocomplete Lambda
-		const url = new URL(GEOAPIFY_AUTOCOMPLETE_LAMBDA_URL);
+		const lambdaUrl = "https://yj2r6zi3kfusl5di2itd2wqxqu0quclp.lambda-url.us-east-2.on.aws"
+		const url = new URL(lambdaUrl);
 		url.searchParams.set('a', address);
 
 		// Fetch the location data from the Geoapify API
