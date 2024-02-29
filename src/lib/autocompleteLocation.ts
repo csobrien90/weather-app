@@ -1,4 +1,4 @@
-import { GEOAPIFY_API_KEY } from '../../env'
+import { GEOAPIFY_AUTOCOMPLETE_LAMBDA_URL } from '../../env'
 import { autocompleteLocationData } from '../types'
 
 export async function autocompleteLocation(
@@ -9,12 +9,9 @@ export async function autocompleteLocation(
 		// Check if the request was aborted
 		if (signal.aborted) return;
 
-		// Build the URL for the Geoapify API
-		const url = new URL('https://api.geoapify.com/v1/geocode/autocomplete');
-		url.searchParams.set('text', address);
-		url.searchParams.set('apiKey', GEOAPIFY_API_KEY);
-		url.searchParams.set('filter', 'countrycode:us');
-		url.searchParams.set('limit', '20');
+		// Build the URL for the Geoapify Autocomplete Lambda
+		const url = new URL(GEOAPIFY_AUTOCOMPLETE_LAMBDA_URL);
+		url.searchParams.set('a', address);
 
 		// Fetch the location data from the Geoapify API
 		const response = await fetch(url.toString(), { signal });

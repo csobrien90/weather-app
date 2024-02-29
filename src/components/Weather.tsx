@@ -70,7 +70,7 @@ function WeatherCard({ day, data, format }: { day: string, data: WeatherDay, for
 						<h3>{day}</h3>
 						<p>
 							{data.day && <span><img src={dayIcon} alt="sun" /> {data.day.temperature}&deg;{data.day.temperatureUnit}</span>}
-							<span> / </span>
+							{data.day && data.night && <span> / </span>}
 							{data.night && <span><img src={nightIcon} alt="moon" /> {data.night.temperature}&deg;{data.night.temperatureUnit}</span>}
 						</p>
 						{desc && <span className="description" >{desc}</span>}
@@ -100,12 +100,13 @@ const formatDisplayName = (displayName: string): string => {
 const getIcon = (desc: string): {src: string, alt: string} => {
 	if (desc.toLowerCase().includes('partly')) return {src: partialSunIcon, alt: 'mostly sunny'};
 	if (desc.toLowerCase().includes('sunny')) return {src: sunIcon, alt: 'sunny'};
+	if (desc.toLowerCase().includes('clear')) return {src: sunIcon, alt: 'sunny'};
 	if (desc.toLowerCase().includes('thunder')) return {src: stormIcon, alt: 'thunderstorm'};
 	if (desc.toLowerCase().includes('rain')) return {src: rainIcon, alt: 'rain'};
 	if (desc.toLowerCase().includes('snow')) return {src: snowIcon, alt: 'snow'};
 	if (desc.toLowerCase().includes('fog')) return {src: cloudIcon, alt: 'cloudy'};
 
-	return {src: '', alt: desc};
+	return {src: partialSunIcon, alt: 'mostly sunny'};
 }
 
 const getDescription = (data: WeatherDay): JSX.Element | null => {

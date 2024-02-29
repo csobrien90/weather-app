@@ -1,16 +1,15 @@
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Varela+Round&display=swap');
 
 :root {
-	--gray: hsl(158, 7%, 52%)	;
-	--orange: hsl(30, 45%, 50%);
-	--dk-orange: hsl(30, 45%, 45%);
+	--gray: hsl(150, 12%, 53%)	;
+	--orange: hsl(30, 55%, 55%);
+	--dk-orange: hsl(30, 55%, 50%);
 	--beige: hsl(52, 33%, 69%);
-	--green: hsl(75, 37%, 53%);
 
-	--primary: var(--green);
-	--secondary: var(--beige);
-	--tertiary: var(--orange);
-	--neutral: var(--gray);
+	--primary: var(--beige);
+	--secondary: var(--gray);
+	--accent: var(--orange);
+	--accent-interaction: var(--dk-orange);
 }
 
 * {
@@ -29,7 +28,7 @@ body {
 	line-height: 1.5;
 	padding: 1em 2em;
 	max-width: 1200px;
-	background-color: var(--secondary)
+	background-color: var(--primary)
 }
 
 h1 {
@@ -82,7 +81,7 @@ input {
 }
 
 button {
-	background-color: var(--tertiary);
+	background-color: var(--accent);
 	border: none;
 	padding: 1em 2em;
 	cursor: pointer;
@@ -93,8 +92,8 @@ button {
 
 button:hover, button:active {
 	color: white;
-	background-color: var(--dk-orange);
-	box-shadow: inset 0 0 10px -2px var(--orange);
+	background-color: var(--accent-interaction);
+	box-shadow: inset 0 0 10px -2px var(--accent);
 }
 
 button:has(img):hover img, button:has(img):active img{
@@ -108,6 +107,7 @@ button:has(img):hover img, button:has(img):active img{
 	padding: 1em;
 	background-color: var(--gray);
 	border-radius: 5px;
+	align-items: center;
 }
 
 .weather-card > img {

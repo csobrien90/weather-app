@@ -29,6 +29,11 @@ export async function fetchWeatherData(
 		// Desctructure the weather data
 		const { generatedAt, periods } = forecast;
 
+		// Validate the weather data
+		if (!generatedAt || !periods) {
+			return { error: 'Invalid weather data' }
+		}
+
 		// Parse the periods into days
 		const days = periods.reduce((acc, period: Period) => {
 			const { name } = period;

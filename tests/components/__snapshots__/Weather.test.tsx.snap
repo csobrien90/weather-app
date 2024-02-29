@@ -10,22 +10,37 @@ exports[`Weather renders correctly 1`] = `
     Last updated on: 
     Sunday, August 1, 2021 at 1:00 PM
   </p>
-  <article>
-    <h3>
-      Today
-    </h3>
-    <p>
-      Sunny
-    </p>
-    <p>
-      Temperature: 
-      80
-      °F
-    </p>
-    <p>
-      Wind Speed: 
-      5 mph
-    </p>
+  <article
+    className="weather-card"
+  >
+    <img
+      alt="sunny"
+      src="/src/assets/images/sun.svg"
+    />
+    <div>
+      <h3>
+        Today
+      </h3>
+      <p>
+        <span>
+          <img
+            alt="sun"
+            src="/src/assets/images/day.svg"
+          />
+           
+          80
+          °
+          F
+        </span>
+      </p>
+      <span
+        className="description"
+      >
+        <p>
+          Sunny
+        </p>
+      </span>
+    </div>
   </article>
 </section>
 `;

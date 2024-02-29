@@ -27,7 +27,7 @@ test('LocationInput renders correctly', () => {
 	).toJSON();
 	
 	// Check if the component is a form element
-	expect(component).to.have.property('type', 'form');
+	expect(component).to.have.property('type', 'section');
 
 	// Check against the snapshot
 	expect(component).toMatchSnapshot();

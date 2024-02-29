@@ -1,26 +1,32 @@
 // Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`LocationInput renders correctly 1`] = `
-<form>
-  <div>
-    <label>
-      Location
-    </label>
-    <input
-      list="possibleLocations"
-      onChange={[Function]}
-      type="text"
-      value=""
-    />
-    <datalist
-      id="possibleLocations"
-    />
-  </div>
-  <button
-    onClick={[Function]}
-    type="button"
-  >
-    Use Current Location
-  </button>
-</form>
+<section>
+  <form>
+    <div>
+      <label>
+        Location
+      </label>
+      <input
+        list="possibleLocations"
+        onChange={[Function]}
+        type="text"
+        value=""
+      />
+      <datalist
+        id="possibleLocations"
+      />
+    </div>
+    <button
+      onClick={[Function]}
+      type="button"
+    >
+      Use Current Location 
+      <img
+        alt="use current location"
+        src="/src/assets/images/location.svg"
+      />
+    </button>
+  </form>
+</section>
 `;
