@@ -1,3 +1,4 @@
+/* Imports and Variables */
 @import url('https://fonts.googleapis.com/css2?family=Merriweather+Sans:ital,wght@0,300..800;1,300..800&family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Varela+Round&display=swap');
 
 :root {
@@ -12,6 +13,7 @@
 	--accent-interaction: var(--dk-orange);
 }
 
+/* Default Styles and Resets */
 * {
 	box-sizing: border-box;
 	font-family: "Merriweather Sans", sans-serif;
@@ -100,6 +102,7 @@ button:has(img):hover img, button:has(img):active img{
 	filter: invert(1);
 }
 
+/* Weather Card Styles */
 .weather-card {
 	display: grid;
 	grid-template-columns: 100px 1fr;
@@ -147,7 +150,8 @@ button:has(img) img {
 	display: none;
 }
 
-@media screen and (min-width: 768px){
+/* Media Queries */
+@media screen and (min-width: 768px) { /* Tablet */
 	body {
 		font-size: 12px;
 	}
@@ -176,7 +180,7 @@ button:has(img) img {
 	}
 }
 
-@media screen and (min-width: 1024px){
+@media screen and (min-width: 1024px) { /* Desktop */
 	body {
 		font-size: 15px;
 	}
